@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { StatusCodes } from '../common';
-import { getStatistics, updateStatistic } from './repository';
+import { getStatistics, resetStatistic, updateStatistic } from './repository';
 import { WordStatistics } from './staistics';
 
 const router = Router();
@@ -10,13 +10,16 @@ router.get('/', async (req, res) => {
   const allStatistics = await getStatistics();
   return res.json(allStatistics);
 });
+router.delete('/', async (req, res) => {
+  const allStatistics = await resetStatistic();
+  return res.json(allStatistics);
+});
 
 router.put('/', async (req, res) => {
   const wordsStatistics = req.body as WordStatistics[];
 
   try {
     const newWordStatistic = await updateStatistic(wordsStatistics);
-    console.log('test');
     return res.json(newWordStatistic);
   } catch (e) {
     return res.status(StatusCodes.NotFound).send(e);
